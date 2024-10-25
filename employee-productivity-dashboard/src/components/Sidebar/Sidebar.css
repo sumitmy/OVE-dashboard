@@ -1,0 +1,40 @@
+/* Sidebar.css */
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  height: 100vh; /* Full height of the viewport */
+  position: fixed; /* Fixes the sidebar on the left side */
+  top: 0; /* Aligns it to the top */
+  left: 0; /* Aligns it to the left */
+  overflow-y: auto; /* Enables scrolling if content exceeds height */
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0; /* Remove default padding */
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  background-color: #444;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.sidebar ul li a:hover {
+  background-color: #555;
+}

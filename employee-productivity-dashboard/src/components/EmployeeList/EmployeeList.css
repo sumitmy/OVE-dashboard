@@ -1,0 +1,24 @@
+/* Container for the employee list */
+
+/* Styling for the table */
+#employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Make sure header has a background color */
+#employee-table th {
+  background-color: #007bff; /* Blue background for table headers */
+  color: white; /* White text color for headers */
+  position: sticky; /* Make header sticky */
+  top: -1px; /* Stick to top */
+  z-index: 1; /* Ensure it stays above content */
+}
+
+/* Adding some padding for table cells */
+#employee-table th,
+#employee-table td {
+  border: 1px solid #ddd; /* Light border for table cells */
+  padding: 15px; /* Padding inside table cells */
+  text-align: center; /* Center-align text in cells */
+}
