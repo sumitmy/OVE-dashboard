@@ -1,158 +1,192 @@
-import React, { useState } from "react";
+// import React, { useEffect, useState } from "react";
+// import APIService from "../APIService/APIService";
+// import axios from "axios";
+// import "./EmployeeList.css";
+
+// const EmployeeList = ({ filter }) => {
+//   const [employees, setEmployees] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchEmployees = async () => {
+//       const apiKey = "b30f8d97bca4f11b2310dcbc1c241e1a";
+//       const url = `https://desktime.com/api/v2/json/employees?apiKey=${apiKey}`;
+
+//       try {
+//         const response = await axios.get(url);
+//         const employeeData = [];
+
+//         for (const date in response.data.employees) {
+//           const employeesData = response.data.employees[date];
+//           for (const empId in employeesData) {
+//             const empInfo = employeesData[empId];
+//             const productiveTimeSeconds = empInfo.productiveTime || 0;
+//             const productiveTimeFormatted = new Date(
+//               productiveTimeSeconds * 1000
+//             )
+//               .toISOString()
+//               .substr(11, 8);
+
+//             employeeData.push({
+//               id: empInfo.id,
+//               date: date,
+//               name: empInfo.name,
+//               productiveTime: productiveTimeFormatted,
+//             });
+//           }
+//         }
+
+//         setEmployees(employeeData);
+//       } catch (err) {
+//         setError("Error fetching data");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchEmployees();
+//   }, []);
+
+//   if (loading) return <div>Loading...</div>;
+//   if (error) return <div>{error}</div>;
+
+//   // Filter employees based on the provided filter prop
+//   const filteredEmployees = employees.filter((employee) => {
+//     switch (filter) {
+//       case "productive_time_300":
+//         return (
+//           parseInt(employee.productiveTime.split(":")[0]) * 60 +
+//             parseInt(employee.productiveTime.split(":")[1]) >
+//           300
+//         );
+
+//       default:
+//         return true;
+//     }
+//   });
+
+//   return (
+//     <div id="employee-list">
+//       <h2 id="list-title" style={{ marginBottom: "10px" }}>
+//         Employee Productivity Data
+//       </h2>
+//       <div style={{ overflowY: "auto", maxHeight: "500px" }}>
+//         <table
+//           id="employee-table"
+//           style={{ width: "100%", borderCollapse: "collapse" }}
+//         >
+//           <thead>
+//             <tr>
+//               <th scope="col">Employee ID</th>
+//               <th scope="col">Date</th>
+//               <th scope="col">Employee Name</th>
+//               <th scope="col">Productive Time</th>
+//             </tr>
+//           </thead>
+//           <tbody id="employee-data">
+//             {filteredEmployees.map((emp) => (
+//               <tr key={emp.id}>
+//                 <td>{emp.id}</td>
+//                 <td>{emp.date}</td>
+//                 <td>{emp.name}</td>
+//                 <td>{emp.productiveTime}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default EmployeeList;
+
+import React, { useEffect, useState } from "react";
+import { APIService } from "../APIService/APIService"; // Ensure correct import path
 import "./EmployeeList.css";
 
 const EmployeeList = ({ filter }) => {
-  const [employees, setEmployees] = useState([
-    {
-      name: "Rajesh Sharma",
-      productiveTime: "320 min",
-      totalTime: "420 min",
-      productivity: "85%",
-    },
-    {
-      name: "Priya Mehta",
-      productiveTime: "280 min",
-      totalTime: "400 min",
-      productivity: "75%",
-    },
-    {
-      name: "Amit Joshi",
-      productiveTime: "350 min",
-      totalTime: "450 min",
-      productivity: "90%",
-    },
-    {
-      name: "Neha Singh",
-      productiveTime: "220 min",
-      totalTime: "380 min",
-      productivity: "58%",
-    },
-    {
-      name: "Ravi Kumar",
-      productiveTime: "400 min",
-      totalTime: "500 min",
-      productivity: "80%",
-    },
-    {
-      name: "Sneha Patil",
-      productiveTime: "310 min",
-      totalTime: "420 min",
-      productivity: "74%",
-    },
-    {
-      name: "Vikram Desai",
-      productiveTime: "290 min",
-      totalTime: "390 min",
-      productivity: "74%",
-    },
-    {
-      name: "Pooja Reddy",
-      productiveTime: "360 min",
-      totalTime: "460 min",
-      productivity: "78%",
-    },
-    {
-      name: "Arjun Gupta",
-      productiveTime: "370 min",
-      totalTime: "470 min",
-      productivity: "79%",
-    },
-    {
-      name: "Meera Nair",
-      productiveTime: "250 min",
-      totalTime: "350 min",
-      productivity: "71%",
-    },
-    {
-      name: "Sanjay Menon",
-      productiveTime: "330 min",
-      totalTime: "450 min",
-      productivity: "73%",
-    },
-    {
-      name: "Aishwarya Kaur",
-      productiveTime: "240 min",
-      totalTime: "340 min",
-      productivity: "70%",
-    },
-    {
-      name: "Karan Verma",
-      productiveTime: "380 min",
-      totalTime: "490 min",
-      productivity: "77%",
-    },
-    {
-      name: "Leela Choudhary",
-      productiveTime: "420 min",
-      totalTime: "530 min",
-      productivity: "85%",
-    },
-    {
-      name: "Manish Pandey",
-      productiveTime: "310 min",
-      totalTime: "410 min",
-      productivity: "76%",
-    },
-    {
-      name: "Nisha Rao",
-      productiveTime: "300 min",
-      totalTime: "400 min",
-      productivity: "75%",
-    },
-    {
-      name: "Omkar Shetty",
-      productiveTime: "350 min",
-      totalTime: "470 min",
-      productivity: "74%",
-    },
-    {
-      name: "Parul Chopra",
-      productiveTime: "300 min",
-      totalTime: "410 min",
-      productivity: "73%",
-    },
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const data = await APIService();
+        const transformedEmployees = [];
+
+        for (const date in data) {
+          const employeesData = data[date];
+          for (const empId in employeesData) {
+            const empInfo = employeesData[empId];
+            const productiveTimeSeconds = empInfo.productiveTime || 0;
+            const productiveTimeFormatted = new Date(
+              productiveTimeSeconds * 1000
+            )
+              .toISOString()
+              .substr(11, 8);
+
+            transformedEmployees.push({
+              id: empInfo.id,
+              date,
+              name: empInfo.name,
+              productiveTime: productiveTimeFormatted,
+              productiveTimeMinutes: Math.floor(productiveTimeSeconds / 60),
+            });
+          }
+        }
+
+        setEmployees(transformedEmployees);
+      } catch (err) {
+        setError("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  // Filter employees based on the provided filter prop
   const filteredEmployees = employees.filter((employee) => {
     switch (filter) {
       case "productive_time_300":
-        return parseInt(employee.productiveTime) > 300;
-      case "total_time_400":
-        return parseInt(employee.totalTime) > 400;
-      case "productivity_80":
-        return parseInt(employee.productivity) > 80;
+        return employee.productiveTimeMinutes > 300;
       default:
         return true;
     }
   });
 
   return (
-    <div id="employee-list" style={{ marginTop: "10px" }}>
+    <div id="employee-list">
       <h2 id="list-title" style={{ marginBottom: "10px" }}>
         Employee Productivity Data
       </h2>
       <div style={{ overflowY: "auto", maxHeight: "500px" }}>
-        {" "}
-        {/* Container for scrolling */}
         <table
           id="employee-table"
           style={{ width: "100%", borderCollapse: "collapse" }}
         >
           <thead>
             <tr>
-              <th scope="col">Name</th>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Date</th>
+              <th scope="col">Employee Name</th>
               <th scope="col">Productive Time</th>
-              <th scope="col">Total Time</th>
-              <th scope="col">Productivity</th>
             </tr>
           </thead>
           <tbody id="employee-data">
-            {filteredEmployees.map((employee, index) => (
-              <tr key={index}>
-                <td>{employee.name}</td>
-                <td>{employee.productiveTime}</td>
-                <td>{employee.totalTime}</td>
-                <td>{employee.productivity}</td>
+            {filteredEmployees.map((emp) => (
+              <tr key={emp.id}>
+                <td>{emp.id}</td>
+                <td>{emp.date}</td>
+                <td>{emp.name}</td>
+                <td>{emp.productiveTime}</td>
               </tr>
             ))}
           </tbody>

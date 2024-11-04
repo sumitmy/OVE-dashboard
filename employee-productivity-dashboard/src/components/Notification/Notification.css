@@ -11,6 +11,17 @@
   z-index: 1000; /* Ensure it appears above other content */
   animation: fadeIn 0.5s, fadeOut 0.5s 5s; /* Fade in/out effect */
 }
+.notification-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.notification-btn img {
+  width: 30px;
+  height: 30px;
+}
 
 .notification-content {
   display: flex; /* Flexbox for horizontal alignment */

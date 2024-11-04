@@ -1,32 +1,17 @@
-import React, { useState } from "react";
-import Sidebar from "../Sidebar/Sidebar";
-import EmployeeList from "../EmployeeList/EmployeeList";
+import React from "react";
 import FilterDateSection from "../FilterDateSection/FilterDateSection";
+
 import ActionButtons from "../ActionButtons/ActionButtons";
+import EmployeeList from "../EmployeeList/EmployeeList";
 import "./ProductiveTime.css";
 
 const ProductiveTime = () => {
-  const [filter, setFilter] = useState("");
-
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-  };
-
   return (
-    <div className="container">
-      <Sidebar />
-      <div className="main-content">
-        <h1>Productive Time</h1>
-
-        {/* Filter Section */}
-        <FilterDateSection onFilterChange={handleFilterChange} />
-
-        {/* Action Buttons on the right */}
-        <ActionButtons />
-
-        {/* Employee List */}
-        <EmployeeList filter={filter} />
-      </div>
+    <div className="ProductiveTime">
+      {/* <h1>this is Productivetime page </h1> */}
+      <FilterDateSection />
+      <ActionButtons />
+      <EmployeeList />
     </div>
   );
 };

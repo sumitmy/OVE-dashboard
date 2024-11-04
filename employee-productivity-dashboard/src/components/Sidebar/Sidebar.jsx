@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
+// import Productivity from "./Productivity/Productivity.jsx";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -8,14 +9,13 @@ const Sidebar = () => {
       <h2>Admin Panel</h2>
       <ul>
         <li>
-          <Link to="/">Dashboard</Link> {/* Redirects to the dashboard */}
+          <Link to="/dashboard">Dashboard</Link>
         </li>
         <li>
-          <Link to="/admin">Admin</Link> {/* Add your admin route */}
+          <Link to="/admin">Admin</Link>
         </li>
         <li>
-          <Link to="/Prodctivity">Productivity</Link>{" "}
-          {/* Add your Productivity route */}
+          <Link to="/prediction">prediction</Link>
         </li>
       </ul>
     </div>

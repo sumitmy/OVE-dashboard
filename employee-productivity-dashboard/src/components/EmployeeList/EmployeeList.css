@@ -1,15 +1,19 @@
-/* Container for the employee list */
-
 /* Styling for the table */
+#employee-list {
+  margin-top: "10px";
+  width: 82vw;
+  /* border: 1px solid rgb(179, 173, 173); */
+}
 #employee-table {
-  width: 100%;
+  width: 40vw;
   border-collapse: collapse;
 }
 
 /* Make sure header has a background color */
 #employee-table th {
-  background-color: #007bff; /* Blue background for table headers */
-  color: white; /* White text color for headers */
+  /* background-color: #007bff;  */
+  background-color: #cf2e2e;
+  color: rgb(255, 255, 255); /* White text color for headers */
   position: sticky; /* Make header sticky */
   top: -1px; /* Stick to top */
   z-index: 1; /* Ensure it stays above content */
@@ -21,4 +25,7 @@
   border: 1px solid #ddd; /* Light border for table cells */
   padding: 15px; /* Padding inside table cells */
   text-align: center; /* Center-align text in cells */
+}
+#employee-data tr:nth-child(odd) {
+  background-color: #fdfcfce4; /* Light gray background for even rows */
 }

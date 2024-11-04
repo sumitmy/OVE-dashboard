@@ -1,0 +1,79 @@
+.prediction-list-container {
+  height: 100vh;
+  position: relative;
+  left: 16.4vw;
+  margin-top: "10px";
+  width: 82vw;
+}
+.prediction-list-table {
+  width: 40vw;
+  border-collapse: collapse;
+}
+.prediction-list-table th {
+  background-color: #cf2e2e;
+  color: rgb(255, 255, 255); /* White text color for headers */
+  position: sticky; /* Make header sticky */
+  top: -1px; /* Stick to top */
+  z-index: 1; /* Ensure it stays above content */
+}
+
+.prediction-list-table th,
+.prediction-list-table td {
+  border: 1px solid #ddd; /* Light border for table cells */
+  padding: 15px; /* Padding inside table cells */
+  text-align: center; /* Center-align text in cells */
+}
+.prediction-list-data tr:nth-child(odd) {
+  background-color: #fdfcfce4; /* Light gray background for even rows */
+}
+
+.employee-selection {
+  padding-top: 0.5vh;
+}
+.employee-selection,
+.search-input {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center; /* Center align items vertically */
+}
+
+.employee-selection label,
+.search-input label {
+  font-weight: bold; /* Make label text bold */
+  margin-right: 10px;
+  color: #343a40; /* Dark color for better readability */
+}
+
+.employee-selection select,
+.search-input input {
+  padding: 10px; /* More padding for better touch targets */
+  border: 1px solid #ced4da; /* Border color for inputs */
+  border-radius: 4px; /* Rounded corners for inputs */
+  font-size: 16px; /* Increase font size for better readability */
+  transition: border-color 0.2s; /* Smooth transition for border color */
+}
+
+.employee-selection select:focus,
+.search-input input:focus {
+  border-color: #cf2e2e; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+.employee-selection select option {
+  padding: 10px; /* Padding for options */
+}
+
+.action-button {
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px 20px; /* Padding for the button */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+.action-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}

@@ -1,61 +1,15 @@
-/* src/index.css */
+/* Reset and Box Sizing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Body Styling */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
+  min-height: 100vh;
+  min-width: 80vw;
+  overflow: hidden;
 }
-
-.container {
-  display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.sidebar ul {
-  list-style: none;
-}
-
-.sidebar ul li {
-  margin: 15px 0;
-}
-
-.sidebar ul li a {
-  color: #fff;
-  text-decoration: none;
-  display: block;
-  padding: 10px;
-  background-color: #444;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.sidebar ul li a:hover {
-  background-color: #555;
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
-}
-
-.main-content h1 {
-  margin-bottom: 30px;
-}
-
-/* Remaining styles... */

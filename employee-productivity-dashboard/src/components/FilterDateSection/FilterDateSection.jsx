@@ -27,7 +27,7 @@ const FilterDateSection = ({ onFilterChange }) => {
   return (
     <div className="filter-date-section">
       <div className="filter-section">
-        <label htmlFor="filter-select">Filter By:</label>
+        <label htmlFor="filter-select">Filter:</label>
         <select id="filter-select" onChange={handleFilterChange}>
           <option value="">-- Select Filter --</option>
           <option value="productive_time_300">

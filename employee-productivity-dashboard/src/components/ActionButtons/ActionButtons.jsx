@@ -14,10 +14,12 @@ const ActionButtons = () => {
   };
 
   return (
-    <div className="action-buttons">
-      <button onClick={() => downloadFile("excel")}>Download Excel</button>
-      <button onClick={() => downloadFile("pdf")}>Download PDF</button>
-      <button onClick={sendEmail}>Send Email</button>
+    <div className="action-button-container">
+      <div className="action-buttons">
+        <button onClick={() => downloadFile("excel")}>Download Excel</button>
+        <button onClick={() => downloadFile("pdf")}>Download PDF</button>
+        <button onClick={sendEmail}>Send Email</button>
+      </div>
     </div>
   );
 };
