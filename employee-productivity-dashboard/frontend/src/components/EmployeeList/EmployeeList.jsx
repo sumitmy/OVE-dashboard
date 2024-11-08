@@ -1,6 +1,5 @@
 // import React, { useEffect, useState } from "react";
-// import APIService from "../APIService/APIService";
-// import axios from "axios";
+// import { APIService } from "../APIService/APIService";
 // import "./EmployeeList.css";
 
 // const EmployeeList = ({ filter }) => {
@@ -10,15 +9,12 @@
 
 //   useEffect(() => {
 //     const fetchEmployees = async () => {
-//       const apiKey = "b30f8d97bca4f11b2310dcbc1c241e1a";
-//       const url = `https://desktime.com/api/v2/json/employees?apiKey=${apiKey}`;
-
 //       try {
-//         const response = await axios.get(url);
-//         const employeeData = [];
+//         const data = await APIService();
+//         const transformedEmployees = [];
 
-//         for (const date in response.data.employees) {
-//           const employeesData = response.data.employees[date];
+//         for (const date in data) {
+//           const employeesData = data[date];
 //           for (const empId in employeesData) {
 //             const empInfo = employeesData[empId];
 //             const productiveTimeSeconds = empInfo.productiveTime || 0;
@@ -28,16 +24,17 @@
 //               .toISOString()
 //               .substr(11, 8);
 
-//             employeeData.push({
+//             transformedEmployees.push({
 //               id: empInfo.id,
-//               date: date,
+//               date,
 //               name: empInfo.name,
 //               productiveTime: productiveTimeFormatted,
+//               productiveTimeMinutes: Math.floor(productiveTimeSeconds / 60),
 //             });
 //           }
 //         }
 
-//         setEmployees(employeeData);
+//         setEmployees(transformedEmployees);
 //       } catch (err) {
 //         setError("Error fetching data");
 //       } finally {
@@ -55,12 +52,7 @@
 //   const filteredEmployees = employees.filter((employee) => {
 //     switch (filter) {
 //       case "productive_time_300":
-//         return (
-//           parseInt(employee.productiveTime.split(":")[0]) * 60 +
-//             parseInt(employee.productiveTime.split(":")[1]) >
-//           300
-//         );
-
+//         return employee.productiveTimeMinutes > 300;
 //       default:
 //         return true;
 //     }
@@ -103,7 +95,7 @@
 // export default EmployeeList;
 
 import React, { useEffect, useState } from "react";
-import { APIService } from "../APIService/APIService"; // Ensure correct import path
+import { APIService } from "../APIService/APIService";
 import "./EmployeeList.css";
 
 const EmployeeList = ({ filter }) => {
@@ -112,14 +104,16 @@ const EmployeeList = ({ filter }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Function to fetch employee data from APIService
     const fetchEmployees = async () => {
       try {
         const data = await APIService();
         const transformedEmployees = [];
 
-        for (const date in data) {
+        // Transform and format employee data
+        Object.keys(data).forEach((date) => {
           const employeesData = data[date];
-          for (const empId in employeesData) {
+          Object.keys(employeesData).forEach((empId) => {
             const empInfo = employeesData[empId];
             const productiveTimeSeconds = empInfo.productiveTime || 0;
             const productiveTimeFormatted = new Date(
@@ -135,31 +129,30 @@ const EmployeeList = ({ filter }) => {
               productiveTime: productiveTimeFormatted,
               productiveTimeMinutes: Math.floor(productiveTimeSeconds / 60),
             });
-          }
-        }
+          });
+        });
 
-        setEmployees(transformedEmployees);
+        setEmployees(transformedEmployees); // Set employees data in state
       } catch (err) {
-        setError("Error fetching data");
+        setError("Error fetching data"); // Set error if fetch fails
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading once fetch completes
       }
     };
 
     fetchEmployees();
   }, []);
 
+  // Loading and error state handling
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  // Filter employees based on the provided filter prop
+  // Filter employees based on filter prop
   const filteredEmployees = employees.filter((employee) => {
-    switch (filter) {
-      case "productive_time_300":
-        return employee.productiveTimeMinutes > 300;
-      default:
-        return true;
+    if (filter === "productive_time_300") {
+      return employee.productiveTimeMinutes > 300;
     }
+    return true;
   });
 
   return (
@@ -182,7 +175,7 @@ const EmployeeList = ({ filter }) => {
           </thead>
           <tbody id="employee-data">
             {filteredEmployees.map((emp) => (
-              <tr key={emp.id}>
+              <tr key={`${emp.id}-${emp.date}`}>
                 <td>{emp.id}</td>
                 <td>{emp.date}</td>
                 <td>{emp.name}</td>

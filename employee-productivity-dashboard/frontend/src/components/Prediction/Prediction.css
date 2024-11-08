@@ -2,13 +2,15 @@
   height: 100vh;
   position: relative;
   left: 16.4vw;
-  margin-top: "10px";
+  margin-top: 10px; /* Removed quotes */
   width: 82vw;
 }
+
 .prediction-list-table {
-  width: 40vw;
+  width: 100%; /* Adjusted to fit container */
   border-collapse: collapse;
 }
+
 .prediction-list-table th {
   background-color: #cf2e2e;
   color: rgb(255, 255, 255); /* White text color for headers */
@@ -23,16 +25,14 @@
   padding: 15px; /* Padding inside table cells */
   text-align: center; /* Center-align text in cells */
 }
+
 .prediction-list-data tr:nth-child(odd) {
-  background-color: #fdfcfce4; /* Light gray background for even rows */
+  background-color: #fdfcfce4; /* Light gray background for odd rows */
 }
 
-.employee-selection {
-  padding-top: 0.5vh;
-}
 .employee-selection,
 .search-input {
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   display: flex;
   align-items: center; /* Center align items vertically */
 }
@@ -76,4 +76,73 @@
 
 .action-button:hover {
   background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Prediction.css */
+
+/* Search input styles */
+.search-input {
+  display: flex;
+  align-items: center;
+  /* margin-bottom: 15px; */
+}
+
+.search-input label {
+  margin-right: 10px;
+}
+
+.search-input input {
+  padding: 8px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s;
+}
+
+.search-input input:focus {
+  outline: none;
+  border-color: #66afe9;
+}
+
+/* Dropdown styles */
+.dropdown {
+  position: relative;
+}
+
+.dropdown div {
+  padding: 8px;
+  cursor: pointer;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+.dropdown div:hover {
+  background-color: #f0f0f0;
+}
+
+/* Action button styles */
+.action-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+/* Prediction.css */
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none; /* Chrome/Safari */
+  appearance: none; /* Non-prefixed */
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  display: none; /* Hide the spinners */
 }
