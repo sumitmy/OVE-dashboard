@@ -12,17 +12,6 @@ const HeaderSection = () => {
     profilePic: userPic,
   };
 
-  // Dynamic title based on URL path
-  const getTitle = () => {
-    const path = window.location.pathname;
-    if (path === "/Dashboard") return "Employee Productivity Dashboard";
-    if (path === "/reports") return "Employee Performance Reports";
-    if (path === "/settings") return "Account Settings";
-    if (path === "/admin") return "Admin Page";
-    if (path === "/predcition") return "Predicted Employee Productivity Data";
-    return "Employee Productivity Dashboard";
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowNotificationContent(false);
@@ -42,7 +31,7 @@ const HeaderSection = () => {
   return (
     <div className="container">
       <div className="Header-section">
-        <h1>{getTitle()}</h1>
+        <h1>Employee Productivity Dashboard</h1>
         <div className="user-profile">
           <button
             onClick={handleShowNotification}

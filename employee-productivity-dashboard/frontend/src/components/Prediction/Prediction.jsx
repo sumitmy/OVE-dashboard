@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { APIService } from "../APIService/APIService";
+import ExcludedGroups from "../constants/ExcludedGroups"
 import "./Prediction.css";
 
 const Prediction = ({ filter }) => {
@@ -11,14 +12,18 @@ const Prediction = ({ filter }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState("All");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [groups, setGroups] = useState([]);
   const dropdownRef = useRef(null);
   const [validationErrors, setValidationErrors] = useState({});
-
+  
   useEffect(() => {
     const fetchPredictions = async () => {
+      
       try {
         const data = await APIService();
         const transformedPredictions = [];
+        const groupSet = new Set();
 
         for (const date in data) {
           const predictionsData = data[date];
@@ -28,20 +33,25 @@ const Prediction = ({ filter }) => {
 
             const randomBenchmarkSalary = Math.floor(Math.random() * 41) - 20;
             const randomJobSatisfaction = Math.floor(Math.random() * 5) + 1;
+            if (!ExcludedGroups.includes(predInfo.group)) {
+              transformedPredictions.push({
+                id: predInfo.id,
+                name: predInfo.name,
+                group: predInfo.group,
+                benchmarkSalary: randomBenchmarkSalary,
+                jobSatisfaction: randomJobSatisfaction,
+                productiveTimeMinutes: Math.floor(productiveTimeSeconds / 60),
+                performanceRating: Math.floor(Math.random() * 5) + 1,
+                date: date,
+              });
+            }
 
-            transformedPredictions.push({
-              id: predInfo.id,
-              name: predInfo.name,
-              group: predInfo.group, // Assuming group data is available from API
-              benchmarkSalary: randomBenchmarkSalary,
-              jobSatisfaction: randomJobSatisfaction,
-              productiveTimeMinutes: Math.floor(productiveTimeSeconds / 60),
-              performanceRating: Math.floor(Math.random() * 5) + 1,
-            });
+            groupSet.add(predInfo.group);
           }
         }
 
         setPredictions(transformedPredictions);
+        setGroups([...groupSet]);
       } catch (err) {
         setError("Error fetching prediction data");
       } finally {
@@ -83,14 +93,14 @@ const Prediction = ({ filter }) => {
       searchQuery === "" ||
       prediction.id.toString().startsWith(searchQuery) ||
       prediction.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-    const matchesFilter =
-      filter === "productive_time_300"
-        ? prediction.productiveTimeMinutes > 300
-        : true;
-    const matchesGroup =
-      selectedGroup === "All" || prediction.group === selectedGroup;
 
-    return matchesSearch && matchesFilter && matchesGroup;
+    const matchesGroup =
+      (selectedGroup === "All" || prediction.group === selectedGroup) &&
+      !ExcludedGroups.includes(prediction.group);
+    const matchesYear =
+      selectedYear === "" || prediction.date.startsWith(selectedYear);
+
+    return matchesSearch && matchesGroup && matchesYear;
   });
 
   const handleSearchInputChange = (e) => {
@@ -103,10 +113,11 @@ const Prediction = ({ filter }) => {
     setShowDropdown(false);
   };
 
-  const filteredDropdownEmployees = predictions.filter((employee) =>
-    employee.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+  const filteredDropdownEmployees = predictions.filter(
+    (employee) =>
+      !ExcludedGroups.includes(employee.group) &&
+      employee.name.toLowerCase().startsWith(searchQuery.toLowerCase())
   );
-
   const toggleEditMode = () => {
     setIsEditMode((prevMode) => !prevMode);
     if (isEditMode) {
@@ -182,32 +193,15 @@ const Prediction = ({ filter }) => {
             id="group"
             value={selectedGroup}
             onChange={(e) => setSelectedGroup(e.target.value)}
-            style={{
-              marginLeft: "5px",
-              padding: "5px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              fontSize: "16px",
-              padding: "5px",
-              width: "200px",
-            }}
           >
             <option value="All">All</option>
-            <option value="Without team">Without team</option>
-            <option value="Anil`s Team">Anil`s Team</option>
-            <option value="BD">BD</option>
-            <option value="Big-city">Big-city</option>
-            <option value="Bingo">Bingo</option>
-            <option value="HR">HR</option>
-            <option value="Jimmy">Jimmy</option>
-            <option value="MW-Support">MW-Support</option>
-            <option value="Operations Management">Operations Management</option>
-            <option value="Paperless">Paperless</option>
-            <option value="Paras Team">Paras Team</option>
-            <option value="Recruitment Team">Recruitment team</option>
-            <option value="Shipeezi">Shipeezi</option>
-            <option value="Stratton">Stratton</option>
-            <option value="UI">UI</option>
+            {groups
+              .filter((group) => !ExcludedGroups.includes(group))
+              .map((group, index) => (
+                <option key={index} value={group}>
+                  {group}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -276,6 +270,24 @@ const Prediction = ({ filter }) => {
             )}
           </div>
         </div>
+        {/* Year Selection Dropdown */}
+        <div className="year" style={{ marginLeft: "10px" }}>
+          <label htmlFor="year" style={{ fontWeight: "bold" }}>
+            Year:
+          </label>
+          <select
+            id="year"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            {/* Add more years as needed */}
+          </select>
+        </div>
+
         <button onClick={toggleEditMode} style={{ marginLeft: "10px" }}>
           {isEditMode ? "Save" : "Edit"}
         </button>
@@ -283,7 +295,7 @@ const Prediction = ({ filter }) => {
 
       <div
         className="prediction-list-table-container"
-        style={{ overflowY: "auto", maxHeight: "500px" }}
+        style={{ overflowY: "auto", height: "70vh", maxHeight: "500px" }}
       >
         <table
           className="prediction-list-table"
@@ -294,14 +306,10 @@ const Prediction = ({ filter }) => {
               <th style={{ border: "1px solid #ccc" }}>ID</th>
               <th style={{ border: "1px solid #ccc" }}>Name</th>
               <th style={{ border: "1px solid #ccc" }}>Group</th>
+              <th style={{ border: "1px solid #ccc" }}>Benchmark Salary</th>
+              <th style={{ border: "1px solid #ccc" }}>Job Satisfaction</th>
               <th style={{ border: "1px solid #ccc" }}>
-                Benchmark Salary/Year
-              </th>
-              <th style={{ border: "1px solid #ccc" }}>
-                Job Satisfaction/Year
-              </th>
-              <th style={{ border: "1px solid #ccc" }}>
-                Performance Rating/Year
+                Monthly Average Efficiency
               </th>
             </tr>
           </thead>
@@ -405,19 +413,8 @@ const Prediction = ({ filter }) => {
       </div>
 
       {/* Footer with Prediction Button */}
-      <footer
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "20px",
-        }}
-      >
-        <button
-          onClick={handlePredictionButtonClick}
-          style={{ padding: "10px 20px" }}
-        >
-          Prediction
-        </button>
+      <footer>
+        <button onClick={handlePredictionButtonClick}>Prediction</button>
       </footer>
     </div>
   );

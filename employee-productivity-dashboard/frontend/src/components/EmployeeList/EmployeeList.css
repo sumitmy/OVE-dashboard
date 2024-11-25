@@ -8,6 +8,69 @@
   width: 40vw;
   border-collapse: collapse;
 }
+.heading-download-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  width: 83.4vw;
+  
+}
+/* action button css */
+
+.action-buttons {
+  gap: 1px;
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+  padding-right: 20px;
+  
+}
+
+button {
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.311);
+}
+
+button:hover {
+  color: white;
+  background-color: #0056b3;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .action-buttons {
+    left: 50%;
+    transform: translateX(-50%);
+    padding-bottom: 10px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+
+/* Media query for extra-small screens */
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+    position: static;
+    align-items: center;
+    gap: 5px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 12px;
+    padding: 8px;
+  }
+}
 
 /* Make sure header has a background color */
 #employee-table th {
@@ -27,5 +90,5 @@
   text-align: center; /* Center-align text in cells */
 }
 #employee-data tr:nth-child(odd) {
-  background-color: #fdfcfce4; /* Light gray background for even rows */
+  background-color: #fdfcfcb7; /* Light gray background for even rows */
 }

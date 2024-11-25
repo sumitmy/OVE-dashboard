@@ -78,7 +78,15 @@
   background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Prediction.css */
+/* group */
+#group {
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 5px;
+  width: 200px;
+}
 
 /* Search input styles */
 .search-input {
@@ -121,6 +129,17 @@
   background-color: #f0f0f0;
 }
 
+/* year */
+#year{
+margin-left: 5px;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 16px;
+padding: 5px;
+width: 120px;
+}
+
+
 /* Action button styles */
 .action-button {
   padding: 10px 15px;
@@ -146,3 +165,14 @@
 .no-spinner::-webkit-inner-spin-button {
   display: none; /* Hide the spinners */
 }
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+
+}
+footer button {
+  padding: 10px 20px;
+}
+

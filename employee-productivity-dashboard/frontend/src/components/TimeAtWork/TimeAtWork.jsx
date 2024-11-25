@@ -7,9 +7,10 @@ import "jspdf-autotable";
 import calender from "./reshot-icon-calendar-KMX6W4BYZD.svg";
 import { APIService } from "../APIService/APIService";
 import ExcludedGroups from "../constants/ExcludedGroups";
-import "./NonProductiveTime.css";
+import "./TimeAtWork.css";
 
-const NonProductivity = () => {
+
+const TimeAtWork = () => {
   const [filter, setFilter] = useState("");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("day");
@@ -86,36 +87,130 @@ const NonProductivity = () => {
     updateDatesForView();
   }, [view]);
 
+  // useEffect(() => {
+  //   const fetchEmployees = async () => {
+  //     try {
+  //       const data = await APIService();
+  //       const transformedEmployees = [];
+        
+        
+       
+  
+  //       Object.keys(data).forEach((date) => {
+  //         const employeesData = data[date];
+  //         Object.keys(employeesData).forEach((empId) => {
+  //           const empInfo = employeesData[empId];
+  
+  //           const atWorkTime = empInfo.atWorkTime || 0;
+  //           const workStarts = empInfo.work_starts; // e.g., "10:00:00"
+  //           const workEnds = empInfo.work_ends; // e.g., "19:00:00"
+  
+  //           const formatTime = (seconds) =>
+  //             new Date(seconds * 1000).toISOString().substr(11, 8);
+  
+  //           // Parse work_starts into today's date
+  //           const [startHours, startMinutes, startSeconds] = workStarts
+  //             .split(":")
+  //             .map(Number);
+  
+  //           const workStartTime = new Date();
+  //           workStartTime.setHours(startHours, startMinutes, startSeconds);
+  
+  //           // Current time for comparison
+  //           const currentTime = new Date();
+            
+  //           // Only include employees whose work_starts time has passed
+  //           if (currentTime >= workStartTime) {
+  //             if (!excludedGroups.includes(empInfo.group)) {
+  //             transformedEmployees.push({
+  //               id: empInfo.id,
+  //               date,
+  //               name: empInfo.name,
+  //               workStarts,
+  //               workEnds,
+  //               atWorkTime: formatTime(atWorkTime),
+  //               atWorkTimeMinutes: Math.floor(atWorkTime / 60),
+  //             });
+  //           }
+  //           }
+  //         });
+  //       });
+  
+  //       setEmployees(transformedEmployees);
+  //     } catch (err) {
+  //       setError("Error fetching data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   fetchEmployees();
+  // }, []);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const data = await APIService();
         const transformedEmployees = [];
-
+  
         Object.keys(data).forEach((date) => {
           const employeesData = data[date];
           Object.keys(employeesData).forEach((empId) => {
             const empInfo = employeesData[empId];
-            const totalWorkTime = 480 * 60; // Assuming 480 minutes (8 hours) as total work time in seconds
-            const productivitySeconds = empInfo.productiveTime || 0;
-            const nonProductivitySeconds = totalWorkTime - productivitySeconds;
-            const nonProductivityFormatted = new Date(
-              nonProductivitySeconds * 1000
-            )
-              .toISOString()
-              .substr(11, 8);
+  
+            const atWorkTime = empInfo.atWorkTime || 0; // Productive time in seconds
+            const workStarts = empInfo.work_starts; // e.g., "10:00:00"
+            const workEnds = empInfo.work_ends; // e.g., "19:00:00"
+            
+            const formatTime = (seconds) =>
+              new Date(seconds * 1000).toISOString().substr(11, 8);
+  
+            // Parse work_starts into today's date
+            const [startHours, startMinutes, startSeconds] = workStarts
+              .split(":")
+              .map(Number);
+  
+            const workStartTime = new Date();
+            workStartTime.setHours(startHours, startMinutes, startSeconds, 0); // Set to today's date with work start time
+  
+            // Current time for comparison
+            const currentTime = new Date();
+  
+            // Calculate how much time has passed since the shift started
+            const timePassedMillis = currentTime - workStartTime; // Time in milliseconds
+            const timePassedSeconds = Math.floor(timePassedMillis / 1000); // Convert to seconds
+            const timePassedMinutes = Math.floor(timePassedSeconds / 60); // Convert to minutes
+            const timePassedHours = Math.floor(timePassedMinutes / 60); // Convert to hours
+  
+            // Only include employees whose work_starts time has passed
+            if (currentTime >= workStartTime) {
               if (!ExcludedGroups.includes(empInfo.group)) {
-            transformedEmployees.push({
-              id: empInfo.id,
-              date,
-              name: empInfo.name,
-              nonProductivity: nonProductivityFormatted,
-              nonProductivityMinutes: Math.floor(nonProductivitySeconds / 60),
-            });
-          }
+                transformedEmployees.push({
+                  id: empInfo.id,
+                  date,
+                  name: empInfo.name,
+                  workStarts,
+                  workEnds,
+                  atWorkTime: formatTime(atWorkTime),
+                  atWorkTimeMinutes: Math.floor(atWorkTime / 60),
+                  timePassedHours,
+                  timePassedMinutes,
+                  timePassedSeconds,
+                  workStartTime // Add work start time to help with sorting
+                });
+              }
+            }
           });
+        });  
+        // Sort employees: First by atWorkTimeMinutes (ascending), then by workStartTime (ascending)
+        transformedEmployees.sort((a, b) => {
+          if (a.atWorkTimeMinutes === b.atWorkTimeMinutes) {
+            // If time worked is equal, sort by shift start time
+            return a.workStartTime - b.workStartTime;
+          }
+          // Otherwise, sort by atWorkTimeMinutes (ascending)
+          return a.atWorkTimeMinutes - b.atWorkTimeMinutes;
         });
-
+  
         setEmployees(transformedEmployees);
       } catch (err) {
         setError("Error fetching data");
@@ -123,20 +218,22 @@ const NonProductivity = () => {
         setLoading(false);
       }
     };
-
+  
     fetchEmployees();
   }, []);
+  
+  
+  
+  const filteredEmployees = employees
+    .filter((employee) => {
+      if (filter === "work_time_300") {
+        return employee.atWorkTimeMinutes > 300;
+      }
+      return true;
+    })
+    .sort((a, b) => a.atWorkTimeMinutes - b.atWorkTimeMinutes);
 
-  const filteredEmployees = employees.filter((employee) => {
-    if (filter === "non_productivity_180") {
-      return employee.nonProductivityMinutes > 180;
-    }
-    return true;
-  });
-
-  const headers = [
-    ["Employee ID", "Date", "Employee Name", "Non-Productivity"],
-  ];
+  const headers = [["Employee ID", "Date", "Employee Name", "At Work Time"]];
 
   const downloadExcel = () => {
     const worksheetData = filteredEmployees.length ? filteredEmployees : [];
@@ -144,26 +241,26 @@ const NonProductivity = () => {
     XLSX.utils.sheet_add_aoa(worksheet, headers, { origin: "A1" });
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
-    XLSX.writeFile(workbook, "Employee_NonProductivity_Data.xlsx");
+    XLSX.writeFile(workbook, "Employee_Time_At_Work_Data.xlsx");
   };
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-    doc.text("Employee Non-Productivity Data", 20, 10);
+    doc.text("Employee Time at Work Data", 20, 10);
     doc.autoTable({
       head: headers,
       body: filteredEmployees.map((emp) => [
         emp.id,
         emp.date,
         emp.name,
-        emp.nonProductivity,
+        emp.atWorkTime,
       ]),
     });
-    doc.save("Employee_NonProductivity_Data.pdf");
+    doc.save("Employee_Time_At_Work_Data.pdf");
   };
 
   const sendEmail = () => {
-    const mailtoLink = `mailto:?subject=Employee Non-Productivity Data&body=Please find attached the Employee Non-Productivity Data.`;
+    const mailtoLink = `mailto:?subject=Employee Time at Work Data&body=Please find attached the Employee Time at Work Data.`;
     window.location.href = mailtoLink;
   };
 
@@ -171,15 +268,13 @@ const NonProductivity = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="NonProductiveTime">
+    <div className="TimeAtWork">
       <div className="filter-date-section">
         <div className="filter-section">
           <label htmlFor="filter-select">Filter:</label>
           <select id="filter-select" onChange={handleFilterChange}>
             <option value="">-- Select Filter --</option>
-            <option value="non_productivity_180">
-              Non-Productivity Time &lt; 180 min
-            </option>
+            <option value="work_time_300">Time at Work &gt; 300 min</option>
             <option value="total_time_400">Total Time &gt; 400 min</option>
             <option value="productivity_80">Productivity &gt; 80%</option>
           </select>
@@ -244,7 +339,7 @@ const NonProductivity = () => {
 
       <div id="employee-list">
         <div className="heading-download-btn">
-          <h2 id="list-title">Employee Non-Productivity Data</h2>
+          <h2 id="list-title">Employee Time at Work Data</h2>
           <div className="action-buttons">
             <button onClick={downloadExcel}>Download Excel</button>
             <button onClick={downloadPDF}>Download PDF</button>
@@ -253,27 +348,47 @@ const NonProductivity = () => {
         </div>
 
         <div style={{ overflowY: "auto", maxHeight: "500px" }}>
-          <table
-            id="employee-table"
-            style={{ width: "100%", borderCollapse: "collapse" }}
-          >
+          <table id="employee-table" style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
                 <th scope="col">Employee ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Employee Name</th>
-                <th scope="col">Non-Productivity</th>
+                <th scope="col">Total Time At Work</th>
               </tr>
             </thead>
             <tbody id="employee-data">
-              {filteredEmployees.map((emp) => (
-                <tr key={`${emp.id}-${emp.date}`}>
-                  <td>{emp.id}</td>
-                  <td>{emp.date}</td>
-                  <td>{emp.name}</td>
-                  <td>{emp.nonProductivity}</td>
-                </tr>
-              ))}
+              {filteredEmployees.map((emp) => {
+                let timeAtWorkStyle = {};
+                
+                if (emp.atWorkTimeMinutes < 180) {
+                  timeAtWorkStyle.backgroundColor = "#f59190";
+                } else if (emp.atWorkTimeMinutes < 360) {
+                  timeAtWorkStyle.backgroundColor = "#f9a851";
+                } else {
+                  timeAtWorkStyle.backgroundColor = "#71e37a";
+                }
+                return (
+                  <tr key={`${emp.id}-${emp.date}`}>
+                    <td>{emp.id}</td>
+                    <td>{emp.date}</td>
+                    <td>{emp.name}</td>
+                    <td style={timeAtWorkStyle}>{emp.atWorkTime}</td>
+                    {/* <td>{timePassedHours}</td> */}
+                  </tr>
+                );
+                // return (
+                //   <tr key={`${emp.id}-${emp.date}`}>
+                //     <td>{emp.id}</td>
+                //     <td>{emp.date}</td>
+                //     <td>{emp.name}</td>
+                //     <td style={timeAtWorkStyle}>{emp.atWorkTime}</td>
+                //     <td>
+                //       {timePassedHours} hours, {timePassedMinutes % 60} minutes, {timePassedSeconds % 60} seconds
+                //     </td>
+                //   </tr>
+                // );
+              })}
             </tbody>
           </table>
         </div>
@@ -282,4 +397,4 @@ const NonProductivity = () => {
   );
 };
 
-export default NonProductivity;
+export default TimeAtWork;
