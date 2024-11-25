@@ -1,0 +1,25 @@
+.Admin {
+  height: 100vh;
+  position: relative;
+  left: 16.4vw;
+  margin-top: 10px;
+  width: 82vw;
+}
+
+.role-dropdown {
+  margin-top: 20px;
+}
+
+select {
+  width: 200px;
+  padding: 8px;
+}
+
+label {
+  font-size: 16px;
+}
+
+p {
+  color: #4caf50;
+  font-weight: bold;
+}

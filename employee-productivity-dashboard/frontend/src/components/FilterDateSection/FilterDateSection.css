@@ -1,0 +1,102 @@
+/* Filter Options */
+.filter-date-section {
+  height: 10vh;
+  width: 83.5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 10px;
+  /* background-color: cyan; */
+}
+
+.filter-section {
+  text-align: left;
+}
+
+.filter-section label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.filter-section select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Date Control Section */
+.date-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+}
+
+#current-date {
+  font-size: 16px;
+  margin-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.calendar-button {
+  /* width: 50px;
+  height: 50px; */
+  background-color: transparent;
+  border: none;
+}
+
+.calendar-button:hover {
+  background-color: transparent;
+}
+
+.calendar-button img {
+  width: 40px;
+  height: 50px;
+  position: relative;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: black;
+}
+
+.nav-btn:hover {
+  background-color: #2a27271d;
+  cursor: pointer;
+}
+
+.view-selector {
+  display: flex;
+  align-items: center;
+}
+
+.view-btn {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #fff;
+  color: black;
+  border: 1px solid black;
+}
+
+.view-btn.active {
+  background-color: #fff;
+  color: black;
+  border: 1px solid black;
+}
+
+.view-btn:hover {
+  color: black;
+  background-color: #2a27271d;
+}

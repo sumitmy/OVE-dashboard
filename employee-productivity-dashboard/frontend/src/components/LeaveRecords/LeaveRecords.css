@@ -1,0 +1,8 @@
+.leaverecord {
+  height: 10vh;
+  width: 20vw;
+  background-color: red;
+  position: absolute;
+  left: 20vw;
+  top: 40vh;
+}
